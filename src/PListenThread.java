@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.InterruptedException;
 import java.lang.System;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 
 
@@ -23,7 +24,12 @@ public class PListenThread extends Thread  {
      */
     public PListenThread(int port, String logFileName)  {
         this.logFile = new File(logFileName);
-        this.ss = new ServerSocket(port);
+        try {
+			this.ss = new ServerSocket(port);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
     }
     
     
@@ -33,26 +39,44 @@ public class PListenThread extends Thread  {
         String message;
         Socket multicastClient = null;
         BufferedReader in = null;
-        FileWriter fw = new FileWriter(logFile, true); // append messages to any pre-existing log file content
+        FileWriter fw = null;
+		try {
+			fw = new FileWriter(logFile, true);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} // append messages to any pre-existing log file content
         
         try  {
             while(true)  {
                 try  {
                     multicastClient = ss.accept();
                     in = new BufferedReader(new InputStreamReader(multicastClient.getInputStream()));
-                    while(message = in.readLine() != null)  { // ?
+                    while((message = in.readLine()) != null)  { // ?
                         fw.write(message + "\n");
                     }
                 }  catch(IOException e)  {
-                    ss.close();
-                    System.err.println(e.printStackTrace());
+                    try {
+						ss.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+                    e.printStackTrace();
                 }
             }
         }  catch(InterruptedException e)  {
-            ss.close();
+            try {
+				ss.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
             System.exit(0);
         }
-        ss.close();
+        try {
+			ss.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 

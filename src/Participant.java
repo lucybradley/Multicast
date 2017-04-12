@@ -101,7 +101,7 @@ public class Participant {
 		return true;
 	}
 	
-	public void register(int lPort){
+	public void register(int lPort) throws IOException{
 		//create listening thread
 		listen = new PListenThread(lPort, logFile);
 		listen.start();
@@ -109,6 +109,7 @@ public class Participant {
 		Socket sock =createSocket();
 		
 		String register = "register " + id + " " + addr.getHostAddress() + " " + lPort;
+		
 		if(!sendAndReceive(register)){
 			listen.interrupt();
 			listen = null;
@@ -117,6 +118,7 @@ public class Participant {
 		}
 		
 		sock.close();
+		
 	}
 	
 	public void deregister() throws IOException{
