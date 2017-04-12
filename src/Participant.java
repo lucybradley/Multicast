@@ -46,28 +46,28 @@ public class Participant {
 	public void parseInput(String input){
 		String command = input.substring(0, input.indexOf(' '));
 		
-		switch(command){
-			case "register":
-				register(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
-				break;
-			case "deregister":
-				try {
+		try{
+			switch(command){
+				case "register":
+					register(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
+					break;
+				case "deregister":
 					deregister();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case "disconnect":
-				disconnect();
-				break;
-			case "reconnect":
-				reconnect(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
-				break;
-			case "msend":
-				msend(command);
-				break;
-			default:
-				System.out.println("Invalid input, try again");					
+					break;
+				case "disconnect":
+					disconnect();
+					break;
+				case "reconnect":
+					reconnect(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
+					break;
+				case "msend":
+					msend(command);
+					break;
+				default:
+					System.out.println("Invalid input, try again");					
+			}
+		} catch(IOException e){
+			e.printStackTrace();
 		}
 	}
 	
@@ -107,10 +107,6 @@ public class Participant {
 		listen.start();
 		
 		Socket sock =createSocket();
-		if(sock == null){
-			System.out.println("Register failed, try again");
-			return;
-		}
 		
 		String register = "register " + id + " " + addr.getHostAddress() + " " + lPort;
 		if(!sendAndReceive(register)){
@@ -124,25 +120,69 @@ public class Participant {
 	}
 	
 	public void deregister() throws IOException{
+		if(listen == null){
+			System.out.println("Register first!");
+			return;
+		}
+		
 		Socket sock = createSocket();
 		
 		if(!sendAndReceive("deregister " + id));{
 			System.out.println("Deregister failed, try again");
 		}
 		
+		//kill listening thread so a new one can be created with next register
+		listen.interrupt();
+		listen = null;
+		
 		sock.close();
 	}
 	
-	public void disconnect(){
+	public void disconnect() throws IOException{
+		if(listen == null){
+			System.out.println("Register first!");
+			return;
+		}
 		
+		Socket sock = createSocket();
+		
+		if(!sendAndReceive("disconnect " + id));{
+			System.out.println("Disconnect failed, try again");
+		}
+		
+		//kill listening thread so a new one can be created with next connect
+		listen.interrupt();
+		listen = null;
+		
+		sock.close();
 	}
 	
-	public void reconnect(int port){
+	public void reconnect(int port) throws IOException{
+		if(listen == null){
+			System.out.println("Register first!");
+			return;
+		}
 		
+		listen = new PListenThread(port, logFile);
+		listen.start();
+		
+		Socket sock = createSocket();
+		
+		if(!sendAndReceive("reconnect " + id + " " + port));{
+			System.out.println("Reconnect failed, try again");
+		}
+		
+		sock.close();
 	}
 	
-	public void msend(String msg){
+	public void msend(String msg) throws IOException{
+		Socket sock = createSocket();
 		
+		if(!sendAndReceive(msg));{
+			System.out.println("Msend failed, try again");
+		}
+		
+		sock.close();
 	}
 	
 	public static void main(String[] args){
