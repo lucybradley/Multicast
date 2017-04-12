@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class CThread extends Thread{
@@ -44,7 +45,23 @@ public class CThread extends Thread{
 		
 	}
 	
+	public void register(int id, InetAddress addr, int port){
+		
+	}
+	
 	public void deregister(int id){
+		
+	}
+	
+	public void disconnect(int id){
+		
+	}
+	
+	public void reconnect(int id){
+		
+	}
+	
+	public void msend(String msg){
 		
 	}
 }
