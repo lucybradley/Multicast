@@ -14,6 +14,6 @@ public class CThread extends Thread{
 
 	@Override
 	public void run(){
-		
+		//run
 	}
 }
