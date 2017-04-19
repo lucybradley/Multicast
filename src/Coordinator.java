@@ -13,7 +13,7 @@ public class Coordinator {
 	public static HashMap<Integer, Integer> clientPort;
 	public static HashMap<Integer, InetAddress> clientIP;
 	public static HashMap<Integer, LinkedList<Message>> savedMsgs;
-	public static int thresh;
+	public static long thresh;
 	
 	public static void main(String[] args){
 		File config = new File(args[1]);
@@ -26,7 +26,7 @@ public class Coordinator {
 			System.exit(0);
 		}
 		int port = scan.nextInt();
-		thresh = scan.nextInt() *1000; //put the threshhold in milliseconds
+		thresh = scan.nextLong() *1000; //put the threshhold in milliseconds
 		scan.close();
 		
 		ServerSocket serv = null;

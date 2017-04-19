@@ -152,25 +152,24 @@ public class Participant {
 			System.out.println("Disconnect failed, try again");
 		}
 		
-		//kill listening thread so a new one can be created with next connect
+		//interrupt listening thread so a new one can be created with next connect
 		listen.interrupt();
-		listen = null;
 		
 		sock.close();
 	}
 	
-	public void reconnect(int port) throws IOException{
+	public void reconnect(int lPort) throws IOException{
 		if(listen == null){
 			System.out.println("Register first!");
 			return;
 		}
 		
-		listen = new PListenThread(port, logFile);
+		listen = new PListenThread(lPort, logFile);
 		listen.start();
 		
 		Socket sock = createSocket();
 		
-		if(!sendAndReceive("reconnect " + id + " " + port));{
+		if(!sendAndReceive("reconnect " + id + " " + addr.getHostAddress() + " " + lPort));{
 			System.out.println("Reconnect failed, try again");
 		}
 		

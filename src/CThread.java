@@ -57,8 +57,10 @@ public class CThread extends Thread{
 		
 	}
 	
-	public void reconnect(int id){
-		
+	public void reconnect(int id, InetAddress addr, int port){
+		Coordinator.clientStatus.replace(id, true);
+		Coordinator.clientIP.replace(id, addr);
+		Coordinator.clientPort.replace(id,  port);
 	}
 	
 	public void msend(String msg){
