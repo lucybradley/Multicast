@@ -3,8 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Coordinator {
@@ -12,7 +12,7 @@ public class Coordinator {
 	public static HashMap<Integer, Boolean> clientStatus;
 	public static HashMap<Integer, Integer> clientPort;
 	public static HashMap<Integer, InetAddress> clientIP;
-	public static HashMap<Integer, ArrayList<Message>> savedMsgs;
+	public static HashMap<Integer, LinkedList<Message>> savedMsgs;
 	public static int thresh;
 	
 	public static void main(String[] args){
