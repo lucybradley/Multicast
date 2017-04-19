@@ -65,6 +65,7 @@ public class PListenThread extends Thread  {
             }
         }  catch(InterruptedException e)  {
             try {
+            	System.out.println("Listening thread interrupted");
 				ss.close();
 			} catch (IOException e1) {
 				e1.printStackTrace();
