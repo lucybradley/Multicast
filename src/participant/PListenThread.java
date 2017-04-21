@@ -37,35 +37,11 @@ public class PListenThread extends Thread  {
     public void run()  {
     	System.out.println("Listening thread running, port " + ss.getLocalPort());
     	
-        String message;
-        Socket multicastClient = null;
-        BufferedReader in = null;
-        FileWriter fw = null;
-		try {
-			fw = new FileWriter(logFile, true);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} // append messages to any pre-existing log file content
-        
-		boolean listen=true;
-        while(listen)  {
-            try  {
-                multicastClient = ss.accept();
-                in = new BufferedReader(new InputStreamReader(multicastClient.getInputStream()));
-                while((message = in.readLine()) != null)  {
-                    fw.write(message + "\n");
-                }
-            }  catch(IOException e)  {
-                try {
-					ss.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-                e.printStackTrace();
-            } 
-	            
-        
-        }
+    	try {
+			listen();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     public void listen() throws IOException{
@@ -89,7 +65,7 @@ public class PListenThread extends Thread  {
 	                fw.write(message + "\n");
 	            }
         	} catch(SocketTimeoutException e){
-        		if(interrupted()){
+        		if(currentThread().isInterrupted()){
         			ss.close();
         			System.out.println("Listening thread interrupted, ending now");
         			listen=false;

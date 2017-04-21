@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Participant {
@@ -72,7 +73,9 @@ public class Participant {
 				default:
 					System.out.println("Invalid input, try again");					
 			}
-		} catch(IOException e){
+		} catch(NoSuchElementException e1){
+			System.out.println("Invalid input, try again");
+		}catch(IOException e){
 			e.printStackTrace();
 		}
 		scan.close();
