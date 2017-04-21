@@ -35,6 +35,8 @@ public class PListenThread extends Thread  {
     
     @Override
     public void run()  {
+    	System.out.println("Listening thread running, port " + ss.getLocalPort());
+    	
         String message;
         Socket multicastClient = null;
         BufferedReader in = null;

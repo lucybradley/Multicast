@@ -92,17 +92,18 @@ public class Participant {
 		return sock;
 	}
 	
-	public boolean sendAndReceive(String msg) throws IOException{
-		System.out.println("Sending message: " +msg);
-		
+	public boolean sendAndReceive(String msg) throws IOException{		
 		//send message to coordinator
 		writer.write(msg.getBytes());
 		
 		//wait for acknowledgement
-		byte[] buf = new byte["OK".getBytes().length];
-		reader.read(buf); //wait for longer??
+		byte[] buf = new byte[1024];
+		int readIn=0;
+		while(readIn==0){
+			readIn = reader.read(buf); 
+		}
 		
-		if(!new String(buf).equals("OK")){
+		if(!(new String(buf,0,readIn)).equals("OK")){
 			System.out.println("Coordinator did not acknowledge, try again");
 			return false;
 		}
@@ -138,7 +139,7 @@ public class Participant {
 		
 		Socket sock = createSocket();
 		
-		if(!sendAndReceive("deregister " + id));{
+		if(!sendAndReceive("deregister " + id)){
 			System.out.println("Deregister failed, try again");
 		}
 		
@@ -157,7 +158,7 @@ public class Participant {
 		
 		Socket sock = createSocket();
 		
-		if(!sendAndReceive("disconnect " + id));{
+		if(!sendAndReceive("disconnect " + id)){
 			System.out.println("Disconnect failed, try again");
 		}
 		
@@ -178,7 +179,7 @@ public class Participant {
 		
 		Socket sock = createSocket();
 		
-		if(!sendAndReceive("reconnect " + id + " " + addr.getHostAddress() + " " + lPort));{
+		if(!sendAndReceive("reconnect " + id + " " + addr.getHostAddress() + " " + lPort)){
 			System.out.println("Reconnect failed, try again");
 		}
 		
@@ -188,7 +189,7 @@ public class Participant {
 	public void msend(String msg) throws IOException{
 		Socket sock = createSocket();
 		
-		if(!sendAndReceive(msg));{
+		if(!sendAndReceive(msg)){
 			System.out.println("Msend failed, try again");
 		}
 		
@@ -200,6 +201,7 @@ public class Participant {
 		Scanner scan = new Scanner(System.in);
 		
 		while(true){
+			System.out.print("send> ");
 			p.parseInput(scan.nextLine());
 		}
 	}

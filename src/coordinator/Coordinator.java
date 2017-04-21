@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 public class Coordinator {
 	
-	public static HashMap<Integer, Boolean> clientStatus;
-	public static HashMap<Integer, Integer> clientPort;
-	public static HashMap<Integer, InetAddress> clientIP;
-	public static HashMap<Integer, LinkedList<Message>> savedMsgs;
+	public static HashMap<Integer, Boolean> clientStatus = new HashMap<Integer,Boolean>();
+	public static HashMap<Integer, Integer> clientPort = new HashMap<Integer,Integer>();
+	public static HashMap<Integer, InetAddress> clientIP = new HashMap<Integer, InetAddress>();
+	public static HashMap<Integer, LinkedList<Message>> savedMsgs = new HashMap<Integer, LinkedList<Message>>();
 	public static long thresh;
 	
 	public static void main(String[] args){
