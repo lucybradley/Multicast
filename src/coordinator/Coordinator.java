@@ -1,3 +1,4 @@
+package coordinator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Coordinator {
 	public static long thresh;
 	
 	public static void main(String[] args){
-		File config = new File(args[1]);
+		File config = new File(args[0]);
 		
 		Scanner scan = null;
 		try {
@@ -26,7 +27,9 @@ public class Coordinator {
 			System.exit(0);
 		}
 		int port = scan.nextInt();
+		System.out.println("Coordinator listening on " + port);
 		thresh = scan.nextLong() *1000; //put the threshhold in milliseconds
+		System.out.println("Coordinator time threshold: " + thresh + " milliseconds");
 		scan.close();
 		
 		ServerSocket serv = null;

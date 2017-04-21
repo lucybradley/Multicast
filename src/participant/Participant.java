@@ -1,3 +1,4 @@
+package participant;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,7 +31,9 @@ public class Participant {
 		
 		//parse config file
 		id = Integer.valueOf(scan.nextLine());
+		System.out.println("New client id: " + id);
 		logFile = scan.nextLine();
+		System.out.println("Client " + id + " logfile: " + logFile);
 		String IPPort = scan.nextLine();
 		
 		try {
@@ -40,16 +43,19 @@ public class Participant {
 			System.exit(0);
 		}
 		sPort = Integer.valueOf(IPPort.substring(IPPort.indexOf(':')+1).trim());
+		System.out.println("Client sending to IP " + addr.getHostAddress() + " and port " + sPort);
 		scan.close();
 	}
 	
 	public void parseInput(String input){
-		String command = input.substring(0, input.indexOf(' '));
+		Scanner scan= new Scanner(input);
+		scan.useDelimiter(" ");
+		String command = scan.next();
 		
 		try{
 			switch(command){
 				case "register":
-					register(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
+					register(scan.nextInt());
 					break;
 				case "deregister":
 					deregister();
@@ -58,10 +64,10 @@ public class Participant {
 					disconnect();
 					break;
 				case "reconnect":
-					reconnect(Integer.valueOf(command.substring(command.indexOf(' ')+1)));
+					reconnect(scan.nextInt());
 					break;
 				case "msend":
-					msend(command);
+					msend(input);
 					break;
 				default:
 					System.out.println("Invalid input, try again");					
@@ -69,6 +75,7 @@ public class Participant {
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+		scan.close();
 	}
 	
 	public Socket createSocket(){
@@ -86,6 +93,8 @@ public class Participant {
 	}
 	
 	public boolean sendAndReceive(String msg) throws IOException{
+		System.out.println("Sending message: " +msg);
+		
 		//send message to coordinator
 		writer.write(msg.getBytes());
 		
@@ -187,7 +196,7 @@ public class Participant {
 	}
 	
 	public static void main(String[] args){
-		Participant p = new Participant(args[1]);
+		Participant p = new Participant(args[0]);
 		Scanner scan = new Scanner(System.in);
 		
 		while(true){

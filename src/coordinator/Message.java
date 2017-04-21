@@ -1,3 +1,4 @@
+package coordinator;
 
 public class Message {
 	private long timestamp;
